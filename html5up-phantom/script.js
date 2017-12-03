@@ -34,6 +34,40 @@ app.get('/register', function (req, res) {
 app.get('/cups', function (req, res) {
     res.render("cups.html")
 })
+
+app.get('/updateCups/:qt', function (req, res) {
+    var qt = req.params.qt
+    db.items.findAndModify({
+        query: {
+            _name: "cups"
+        },
+        update: {
+            $inc: {
+                currValue: parseInt(qt)
+            }
+        },
+        new: true
+    }, function (err, counter) {
+        if(err){
+            res.send(err)
+        }
+        res.send("200")
+    })
+})
+
+app.get('/cupCount', function(req, res){
+    db.items.findOne({
+        _name:"cups"
+    }, function(err, cup){
+        if(err){
+            res.send(err)
+        }
+        res.send(cup.currValue.toString())
+    })
+})
+        
+        
+
 app.get('/napkin', function (req, res) {
     res.render("napkin.html")
 })
@@ -154,18 +188,18 @@ app.get('/buy/:total', function (req, res, next) {
                     },
                     new: true
                 }, function (err, counter) {
-                    if(err){
+                    if (err) {
                         res.send(err)
                     }
-                    
+
 
                 });
             }
         }
     );
     next()
-}, function(req, res){
-    
+}, function (req, res) {
+
     res.send("200")
 })
 //
