@@ -3,13 +3,9 @@ var path = require('path')
 var bP = require('body-parser')
 var cookieParser = require('cookie-parser')
 var mongojs = require('mongojs')
-var db = mongojs('mongodb://masterphuc:vietnam64@ds039125.mlab.com:39125/se_books_2017', ['Customers','accounts'])
+var db = mongojs('mongodb://masterphuc:vietnam64@ds039125.mlab.com:39125/se_books_2017', ['Customers', 'accounts', 'invendorAcc'])
 var jsonfile = require('jsonfile')
-
-//var index = require('./routes/index')
-//var tasks = require('./routes/tasks')
-//var user = require('./routes/user')
-//var book = require('./routes/book')641
+var request = require('request')
 
 var app = express()
 
@@ -30,11 +26,8 @@ app.use(bP.json())
 app.use(bP.urlencoded({
     extended: false
 }))
-//
-//app.use('/', index)
-//app.use('/api', tasks)
-//app.use('/user', user)
-//app.use('/book', book)
+
+
 app.get('/register', function (req, res) {
     res.render("register.html")
 })
@@ -110,20 +103,70 @@ app.post('/login', function (req, res) {
     }, function (err, customer) {
         if (err) {
             res.send(err)
-        }else{
+        } else {
             console.log(customer)
-            if(customer.pword==pword){
-                res.cookie("email",email)
+            if (customer.pword == pword) {
+                res.cookie("email", email)
                 res.send("200")
-            }else{
+            } else {
                 res.send("401")
             }
         }
     })
 })
 
-app.post('/buy', function(req, res){
+app.get('/buy/:total', function (req, res, next) {
+    var total = req.params.total
+    request.post(
+        'https://api132269live.gateway.akana.com:443/fundstransfer', {
+            json: {
+                "personalUserID": "M01260604",
+                "channelCode": "OLB_MM",
+                "transactionTypeCode": "REGPMT",
+                "fromOperatingCompanyIdentifier": "288",
+                "fromProductCode": "DDA",
+                "fromPrimaryAccountIdentifier": "100100511516",
+                "fromAccountType": "SAVINGS",
+                "toOperatingCompanyIdentifier": "52",
+                "toProductCode": "CCD",
+                "toPrimaryAccountIdentifier": "4718240047142264",
+                "requestedTransferAmount": total.toString(),
+                "identityIdentifier": "MOBLBNKG",
+                "paymentType": "OtherAmount",
+                "paymentTypeCode": "FUTUREPMTMADETHRUWEB",
+                "effectiveDate": "2016-01-21",
+                "isRecurring": "true",
+                "selectedDayOfMOnth": "25",
+                "enhancedAutoPayTypeCode": "F"
+            }
+        },
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+
+                db.invendorAcc.findAndModify({
+                    query: {
+                        accName: "invendors"
+                    },
+                    update: {
+                        $inc: {
+                            balance: parseInt(total)
+                        }
+                    },
+                    new: true
+                }, function (err, counter) {
+                    if(err){
+                        res.send(err)
+                    }
+                    
+
+                });
+            }
+        }
+    );
+    next()
+}, function(req, res){
     
+    res.send("200")
 })
 //
 //app.get('/list/:item', function (req, res, next) {
