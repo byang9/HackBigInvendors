@@ -3,13 +3,13 @@ var path = require('path')
 var bP = require('body-parser')
 var cookieParser = require('cookie-parser')
 var mongojs = require('mongojs')
-var db = mongojs('mongodb://masterphuc:vietnam64@ds039125.mlab.com:39125/se_books_2017', ['users', 'counters', 'accounts'])
+var db = mongojs('mongodb://masterphuc:vietnam64@ds039125.mlab.com:39125/se_books_2017', ['Customers','accounts'])
 var jsonfile = require('jsonfile')
 
 //var index = require('./routes/index')
 //var tasks = require('./routes/tasks')
 //var user = require('./routes/user')
-//var book = require('./routes/book')
+//var book = require('./routes/book')641
 
 var app = express()
 
@@ -95,18 +95,20 @@ app.get('/addcard', function (req, res) {
     res.render("addCard.html")
 })
 
-app.get('/login', function (req, res) {
+app.post('/login', function (req, res) {
     var email = req.body.email;
     var pword = req.body.pword;
+    console.log(email + pword)
     db.Customers.findOne({
         email: email
     }, function (err, customer) {
         if (err) {
             res.send(err)
         }else{
-            if(customer.password==pword){
+            console.log(customer)
+            if(customer.pword==pword){
                 res.cookie("email",email)
-                res.send("index.html")
+                res.send("200")
             }else{
                 res.send("401")
             }
@@ -114,23 +116,8 @@ app.get('/login', function (req, res) {
     })
 })
 
-
-app.get('/addcard/:cardNum/:cvn/:bill/:mail/:customer', function (req, res) {
-    console.log(req.cookies.username)
-    var account = {
-        "cardNum": req.params.cardNum,
-        "cvn": req.params.cvn,
-        "bill": req.params.bill,
-        "mail": req.params.mail,
-        "owner": req.params.buyer
-    }
-    db.accounts.save(account, function (err, task) {
-        if (err) {
-            res.send(err)
-        }
-        res.send("200");
-    })
-
+app.post('/buy', function(req, res){
+    
 })
 //
 //app.get('/list/:item', function (req, res, next) {

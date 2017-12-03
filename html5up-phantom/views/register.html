@@ -60,7 +60,7 @@
             <div class="inner">
                 <br>
                 <section class="acc">
-                    <h2 id="loginHeader">Login</h2>
+                    <h2 id="loginHeader" style="display: none">Login</h2>
                     <h2 id="registerHeader">Register Account</h2>
                     <form id="registerForm">
                         <div class="field half first">
@@ -70,7 +70,7 @@
                             <input type="text" name="lname" id="lname" placeholder="last name" />
                         </div>
                         <div class="field half first">
-                            <input type="text" name="email" id="email" placeholder="email" />
+                            <input type="email" name="email" id="email" placeholder="email" />
                         </div>
                         <div class="field half ">
                             <input type="password" name="password" id="pword" placeholder="password" />
@@ -93,7 +93,7 @@
                         </ul>
                     </form>
 
-                    <form id="loginForm">
+                    <form id="loginForm" style="display: none">
                         <div class="field half first">
                             <input type="email" name="email" id="fname" placeholder="email" />
                         </div>
@@ -111,25 +111,7 @@
         <!-- Footer -->
         <footer id="footer">
             <div class="inner">
-                <!--
-							<section>
-								<h2>Get in touch</h2>
-								<form method="post" action="#">
-									<div class="field half first">
-										<input type="text" name="name" id="name" placeholder="Name" />
-									</div>
-									<div class="field half">
-										<input type="email" name="email" id="email" placeholder="Email" />
-									</div>
-									<div class="field">
-										<textarea name="message" id="message" placeholder="Message"></textarea>
-									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Send" class="special" /></li>
-									</ul>
-								</form>
-							</section>
--->
+    
 
                 <ul class="copyright">
                     <li>&copy; Untitled. All rights reserved</li>
@@ -165,8 +147,8 @@
                         if (data == "200") {
                             $("#registerForm").fadeOut('medium', function() {
                                 $("#registerHeader").fadeOut('medium')
-                                $("#loginForm").fadeIn('medium')
-                                $("#loginHeader").fadeIn('medium')
+                                $("#loginForm").css('display', 'block')
+                                $("#loginHeader").css('display', 'block')
                             })
                         } else if (data == "403") {
                             alert("This email already exists")
@@ -184,9 +166,15 @@
                     url: "http://localhost:3000/login",
                     data: $(this).serialize(),
                     success: function(data){
-                        
+                        if(data=="200"){
+                            window.location.href = "http://localhost:3000/home";
+                        }else{
+                            
+                        alert("bad login")
+                        }
                     }
                 })
+                    return false;
             })
             
             
