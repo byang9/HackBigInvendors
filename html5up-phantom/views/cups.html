@@ -56,7 +56,7 @@
                                     <br>
                                     <input type="submit" value="Commit" style="width:100%; font-family: Helvetica; font-size: 24px; font-weight:normal;">
                                 </form>
-                                You have commited: 0 times.<br> Total people committed: <a id="totalCommitted">4</a>
+                                You have commited: <a id="youCommit">0</a> times.<br> Total people committed: <a id="totalCommitted">4</a>
                             </div>
                             <ul>
                                 <li>12 oz. 100 pcs per box.</li>
@@ -135,7 +135,7 @@
                     
                 }
                 $("#totalCommitted").text(response)
-                if (parseInt(response) >= 5) {
+                if ((parseInt(response) >= 5) && parseInt(response)<8) {
                     $("#price").text("$4.00")
                 }else if (parseInt(response) >= 8) {
                     $("#price").text("$3.00")
@@ -143,6 +143,8 @@
                     $("#price").text("$5.00")
                     
                 }
+                $("#youCommit").text(parseInt(response)-4)
+                
 
                 console.log(response)
             })
