@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+    <title>Phantom by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+    <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+</head>
+
+<body>
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Header -->
+        <header id="">
+            <div class="inner">
+
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <span class="symbol"><img src="images/logo.svg" alt="" /></span><span class="title">Phantom</span>
+                </a>
+
+                <!-- Nav -->
+                <!--
+								<nav>
+									<ul>
+										<li><a href="#menu">Menu</a></li>
+									</ul>
+								</nav>
+-->
+
+            </div>
+        </header>
+
+        <!-- Menu -->
+        <!--
+					<nav id="menu">
+						<h2>Menu</h2>
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li><a href="generic.html">Ipsum veroeros</a></li>
+							<li><a href="generic.html">Tempus etiam</a></li>
+							<li><a href="generic.html">Consequat dolor</a></li>
+							<li><a href="elements.html">Elements</a></li>
+						</ul>
+					</nav>
+-->
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <br>
+                <section class="acc">
+                    <h2 id="loginHeader">Login</h2>
+                    <h2 id="registerHeader">Register Account</h2>
+                    <form id="registerForm">
+                        <div class="field half first">
+                            <input type="text" name="fname" id="fname" placeholder="first name" />
+                        </div>
+                        <div class="field half ">
+                            <input type="text" name="lname" id="lname" placeholder="last name" />
+                        </div>
+                        <div class="field half first">
+                            <input type="text" name="email" id="email" placeholder="email" />
+                        </div>
+                        <div class="field half ">
+                            <input type="password" name="password" id="pword" placeholder="password" />
+                        </div>
+
+                        <div class="field half first">
+                            <input type="text" name="name" id="cnum" placeholder="Card Number" />
+                        </div>
+                        <div class="field half ">
+                            <input type="text" name="cvn" id="cvn" placeholder="CVN" />
+                        </div>
+                        <div class="field">
+                            <textarea name="bill" id="billing" placeholder="Billing Address"></textarea>
+                        </div>
+                        <div class="field">
+                            <textarea name="mail" id="mailing" placeholder="Mailing Address"></textarea>
+                        </div>
+                        <ul class="actions">
+                            <li><input type="submit" value="Send" class="special" /></li>
+                        </ul>
+                    </form>
+
+                    <form id="loginForm">
+                        <div class="field half first">
+                            <input type="email" name="email" id="fname" placeholder="email" />
+                        </div>
+                        <div class="field half ">
+                            <input type="password" name="pword" id="lname" placeholder="password" />
+                        </div>
+                        <ul class="actions">
+                            <li><input type="submit" value="Login" class="special" /></li>
+                        </ul>
+                    </form>
+                </section>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <!--
+							<section>
+								<h2>Get in touch</h2>
+								<form method="post" action="#">
+									<div class="field half first">
+										<input type="text" name="name" id="name" placeholder="Name" />
+									</div>
+									<div class="field half">
+										<input type="email" name="email" id="email" placeholder="Email" />
+									</div>
+									<div class="field">
+										<textarea name="message" id="message" placeholder="Message"></textarea>
+									</div>
+									<ul class="actions">
+										<li><input type="submit" value="Send" class="special" /></li>
+									</ul>
+								</form>
+							</section>
+-->
+
+                <ul class="copyright">
+                    <li>&copy; Untitled. All rights reserved</li>
+                    <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                </ul>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+    <script src="assets/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+
+            $("#registerForm").on('submit', function(e) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:3000/register",
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        // data = JSON object that contact.php returns
+
+                        // we recieve the type of the message: success x danger and apply it to the 
+                        var messageAlert = 'alert-' + data.type;
+                        var messageText = data.message;
+                        if (data == "200") {
+                            $("#registerForm").fadeOut('medium', function() {
+                                $("#registerHeader").fadeOut('medium')
+                                $("#loginForm").fadeIn('medium')
+                                $("#loginHeader").fadeIn('medium')
+                            })
+                        } else if (data == "403") {
+                            alert("This email already exists")
+                        }
+
+                        console.log(data)
+                    }
+                })
+                return false;
+            })
+            
+            $("#loginForm").on('submit', function(e){
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:3000/login",
+                    data: $(this).serialize(),
+                    success: function(data){
+                        
+                    }
+                })
+            })
+            
+            
+        })
+
+    </script>
+
+
+</body>
+
+</html>
