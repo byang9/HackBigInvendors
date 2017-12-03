@@ -38,6 +38,12 @@ app.use(bP.urlencoded({
 app.get('/register', function (req, res) {
     res.render("register.html")
 })
+app.get('/cups', function (req, res) {
+    res.render("cups.html")
+})
+app.get('/napkin', function (req, res) {
+    res.render("napkin.html")
+})
 app.post('/register', function (req, res, next) {
     var fname = req.body.fname
     var lname = req.body.lname
